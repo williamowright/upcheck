@@ -5,6 +5,8 @@ import (
     "fmt"
     "net/http"
     "time"
+		"github.com/joho/godotenv"
+		"os"
 
 	_ "github.com/lib/pq"
 )
@@ -45,8 +47,16 @@ func checkURL(db *sql.DB, url string) {
 
 
 
+
 func main() {
-	connStr := "host=localhost port=5432 user=postgres password=password dbname=upcheck sslmode=disable"
+	godotenv.Load()
+	username := os.Getenv("POSTGRES_USER")
+	password := os.Getenv("POSTGRES_PASSWORD")
+	database := os.Getenv("POSTGRES_DB")
+	port := os.Getenv("POSTGRES_PORT")
+
+	connStr := `host=localhost port=` + port + ` user=` + username + ` password=` + password + ` dbname=` + database + ` sslmode=disable`
+	
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		panic(err)
