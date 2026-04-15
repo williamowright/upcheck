@@ -2,6 +2,8 @@
 UpCheck is an application that sends out http requests to urls of choice and 
 stores the response in a postgres database. It sends out the requests intermittently at a fixed interval.
 
+Migrations run programmatically on startup, tracked in a schema_migrations table, with explicit handling for the no-change case so the app doesn't false-positive panic on a clean restart. 
+
 ## Stack
 Go
 Postgres
