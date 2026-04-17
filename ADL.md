@@ -57,3 +57,18 @@ This enables us to build and evolve the project without the need to think about 
 
 **Revisit:** When/why we might change this
 I don't know why we would change this but the structure may grow as other packages become necessary.
+
+
+## Decision: Set the PRIMARY KEY on the checks table to be a composite primary key with the id and the checked_at column ##
+**DATE:** 2026-04-16
+**Status:** Accepted
+
+**Context:** TimescaleDB requires that any unique index on a hypertable includes the partition column 
+
+**Options:** None really, if I decided against setting up a composite primary key, I would have been unable to partition my data. Or at least wouldn't have been able to use TimescaleDB. 
+
+**Decision:** To use TimescaleDB to partition my data into chunks, therefore using checked_at and id as a composite primary key. 
+
+**Consequences:** This enables us to organize our data by date ranges which will allow users to read their data using ranges.
+
+**Revisit:** This would only change if there was a cleaner way of distributing our data.

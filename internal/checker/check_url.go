@@ -28,11 +28,12 @@ func CheckURL(db *sql.DB, url string) {
 	}
 
 	_, dbErr := db.Exec(
-		`INSERT INTO checks (url, status_code, response_time, is_up) VALUES ($1, $2, $3, $4)`,
+		`INSERT INTO checks (url, status_code, response_time, is_up, checked_at) VALUES ($1, $2, $3, $4, $5)`,
 		url,
 		statusCode,
 		duration.Milliseconds(),
 		isUp,
+		time.Now(),
 	)
 	
 	if dbErr != nil {

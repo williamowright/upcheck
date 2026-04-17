@@ -1,7 +1,9 @@
 CREATE TABLE checks (
-  id SERIAL PRIMARY KEY,
+  id SERIAL,
   url TEXT,
   status_code INT,
   response_time INT,
-  is_up BOOLEAN
+  checked_at TIMESTAMP NOT NULL, 
+  is_up BOOLEAN,
+  PRIMARY KEY (id, checked_at)
 )

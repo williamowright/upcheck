@@ -1,0 +1,1 @@
+SELECT create_hypertable('checks', 'checked_at', migrate_data => TRUE);
