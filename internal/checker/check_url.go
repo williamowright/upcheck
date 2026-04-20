@@ -9,22 +9,22 @@ import (
 
 func CheckURL(db *sql.DB, url string) {
 
-    start := time.Now()
-    resp, err := http.Get(url)
-    duration := time.Since(start)
+	start := time.Now()
+	resp, err := http.Get(url)
+	duration := time.Since(start)
 
 	var statusCode int
 	var isUp bool
 
-    if err != nil {
-        fmt.Printf("DOWN - %s - Error: %v\n", url, err)
+	if err != nil {
+		fmt.Printf("DOWN - %s - Error: %v\n", url, err)
 		statusCode = 0
 		isUp = false
-    } else {
+	} else {
 		defer resp.Body.Close()
 		statusCode = resp.StatusCode
 		isUp = resp.StatusCode < 400
-		fmt.Printf("UP - %s - Status: %d - Time: %v\n", url, resp.StatusCode, duration)
+		fmt.Printf("\nUP - %s - Status: %d - Time: %v\n", url, resp.StatusCode, duration)
 	}
 
 	_, dbErr := db.Exec(
