@@ -33,7 +33,7 @@ We might change this if we know we only have one instance ever running in produc
 
 **Context:** What is the best project structure to allow for growth and scale as the project evolves.
 
-**Options Considered:**
+**Options considered:**
 1. A single flat file
     Pros: - Zero lift because file was already initally built flat
           - Straightforward for the laymen
@@ -65,10 +65,39 @@ I don't know why we would change this but the structure may grow as other packag
 
 **Context:** TimescaleDB requires that any unique index on a hypertable includes the partition column 
 
-**Options:** None really, if I decided against setting up a composite primary key, I would have been unable to partition my data. Or at least wouldn't have been able to use TimescaleDB. 
+**Options considered:** None really, if I decided against setting up a composite primary key, I would have been unable to partition my data. Or at least wouldn't have been able to use TimescaleDB. 
 
 **Decision:** To use TimescaleDB to partition my data into chunks, therefore using checked_at and id as a composite primary key. 
 
 **Consequences:** This enables us to organize our data by date ranges which will allow users to read their data using ranges.
 
 **Revisit:** This would only change if there was a cleaner way of distributing our data.
+
+
+## Decision: Using TimescaleDB over Postgresql ##
+**Date:** 04-27-26
+**Status:** Accepted
+
+**Context:** Choosing to use TimescaleDB over Postgresql on our monitoring application for a multitude of reasons
+
+**Options considered:** 
+1. Postgresql
+    Pros: - Easier initial lift
+          - I have more experience with it
+    Cons:
+          - Manually manage the indexes on the timestamp
+          - More compute intensive to delete because it would have to delete row by row, everything would be on one table making it harder to query from as well
+2. TimescaleDB
+    Pros: - Handles the chunking of data automatically
+          - Fast range queries
+          - Can delete chunks rather than row by row
+          - It is built for time series indexing, optimizing around our data shape
+    Cons:
+          - Took time to set up
+          - Newer to the tech
+
+**Decision:** I chose to use TimescaleDB because it fit my needs very well in the context of a DevOps monitoring application. I wouldn not have to manually manage the indexes on the timestamp column of data. It can easily handle the range queries inherent to the needs of the application. It also automatically handles the chunking of the tables data.
+
+**Consequences:** Using TimescaleDB we can better handle retention and deletion of large sets of data, but we are also constrained by the fact that if we were ever to redefine our time column it would be a painful process to migrate.
+
+**Revisit:** We would reconsider if we were only tracking a singular site or if the application was made to be local to a users machine.
